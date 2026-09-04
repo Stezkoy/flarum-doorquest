@@ -24,7 +24,7 @@ export default class QuestionListPage extends ExtensionPage {
   private query: string = '';
   private throttledSearch = debounce(250, () => this.loadPage(0));
 
-  private numPerPage: number = 50;
+  private numPerPage: number = 10;
   private pageNumber: number = 0;
   private loadingPageNumber: number = 0;
   readonly questionCount: number = app.data.modelStatistics.doorquestQuestions.total;
