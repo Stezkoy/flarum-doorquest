@@ -14,7 +14,8 @@
     },
     "support": {
         "source": "https://github.com/Stezkoy/flarum-doorquest",
-        "issues": "https://github.com/Stezkoy/flarum-doorquest/issues"
+        "issues": "https://github.com/Stezkoy/flarum-doorquest/issues",
+        "forum": "https://discuss.flarum.org/d/39813-doorquest-gate-registration-with-qa"
     },
     "extra": {
         "flarum-extension": {
