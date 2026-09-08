@@ -60,9 +60,15 @@ export default class QuestionListPage extends ExtensionPage {
       this.loadPage(this.pageNumber);
 
       return (
-        <section className="DoorquestListPage-grid DoorquestListPage-grid--loading">
-          <LoadingIndicator containerClassName="LoadingIndicator--block" size="large" />
-        </section>
+        <div className="ExtensionPage-settings">
+          <div className="container">
+            <div className="DoorquestListPage">
+              <section className="DoorquestListPage-section">
+                <LoadingIndicator containerClassName="LoadingIndicator--block" size="large" />
+              </section>
+            </div>
+          </div>
+        </div>
       );
     }
 
@@ -71,117 +77,121 @@ export default class QuestionListPage extends ExtensionPage {
     return (
       <div className="ExtensionPage-settings">
         <div className="container">
-          <section className="DoorquestListPage-section DoorquestListPage-section--list">
-            <header className="DoorquestListPage-section-header">
-              <div className="DoorquestListPage-section-titleGroup">
-                <h3 className="DoorquestListPage-section-title">{app.translator.trans('stezkoy-doorquest.admin.list.heading')}</h3>
-                <span className="DoorquestListPage-totalQuestions">
-                  {app.translator.trans('stezkoy-doorquest.admin.settings.total_questions', { count: this.questionCount })}
-                </span>
-              </div>
-              <div>{this.actionItems().toArray()}</div>
-            </header>
+          <div className="DoorquestListPage">
+            <section className="DoorquestListPage-section">
+                <header className="DoorquestListPage-section-header">
+                  <div className="DoorquestListPage-section-titleGroup">
+                    <h3 className="DoorquestListPage-section-title">{app.translator.trans('stezkoy-doorquest.admin.list.heading')}</h3>
+                    <span className="DoorquestListPage-totalQuestions">
+                      {app.translator.trans('stezkoy-doorquest.admin.settings.total_questions', { count: this.questionCount })}
+                    </span>
+                  </div>
+                  <div>{this.actionItems().toArray()}</div>
+                </header>
 
-            <div className="DoorquestListPage-toolbar">{this.headerItems().toArray()}</div>
+                <div className="DoorquestListPage-sectionBody">
+                  <div className="DoorquestListPage-toolbar">{this.headerItems().toArray()}</div>
 
-            <section
-              className={classList([
-                'DoorquestListPage-cardList',
-                this.isLoadingPage ? 'DoorquestListPage-cardList--loading' : 'DoorquestListPage-cardList--loaded',
-              ])}
-            >
-              <div className="DoorquestListPage-cardList-header">
-                {columns.map((column) => (
-                  <span key={column.itemName}>{column.name}</span>
-                ))}
-              </div>
+                  <section
+                    className={classList([
+                      'DoorquestListPage-cardList',
+                      this.isLoadingPage ? 'DoorquestListPage-cardList--loading' : 'DoorquestListPage-cardList--loaded',
+                    ])}
+                  >
+                    <div className="DoorquestListPage-cardList-header">
+                      {columns.map((column) => (
+                        <span key={column.itemName}>{column.name}</span>
+                      ))}
+                    </div>
 
-              {this.pageData.map((question) => (
-                <div className="DoorquestListPage-cardList-item" data-question-id={question.id()}>
-                  {columns.map((col) => {
-                    const columnContent = col.content && col.content(question);
-                    return (
-                      <div
-                        className="DoorquestListPage-cardList-item-cell"
-                        data-label={extractText(col.name)}
-                        data-column-name={col.itemName}
-                      >
-                        {columnContent ?? app.translator.trans('stezkoy-doorquest.admin.list.content.invalid_column')}
+                    {this.pageData.map((question) => (
+                      <div className="DoorquestListPage-cardList-item" data-question-id={question.id()}>
+                        {columns.map((col) => {
+                          const columnContent = col.content && col.content(question);
+                          return (
+                            <div
+                              className="DoorquestListPage-cardList-item-cell"
+                              data-label={extractText(col.name)}
+                              data-column-name={col.itemName}
+                            >
+                              {columnContent ?? app.translator.trans('stezkoy-doorquest.admin.list.content.invalid_column')}
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                </div>
-              ))}
+                    ))}
 
-              {this.isLoadingPage && <LoadingIndicator size="large" />}
-            </section>
+                    {this.isLoadingPage && <LoadingIndicator size="large" />}
+                  </section>
 
-            <nav className="DoorquestListPage-gridPagination">
-              <Button
-                disabled={this.pageNumber === 0}
-                aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.first_page_button')}
-                title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.first_page_button')}
-                onclick={this.goToPage.bind(this, 1)}
-                icon="fas fa-step-backward"
-                className="Button Button--icon"
-              />
-              <Button
-                disabled={this.pageNumber === 0}
-                aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.back_button')}
-                title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.back_button')}
-                onclick={this.previousPage.bind(this)}
-                icon="fas fa-chevron-left"
-                className="Button Button--icon"
-              />
-              <span className="DoorquestListPage-pageNumber">
-                {app.translator.trans('stezkoy-doorquest.admin.list.pagination.page_counter', {
-                  current: (
-                    <input
-                      type="text"
-                      inputmode="numeric"
-                      pattern="[0-9]*"
-                      value={this.loadingPageNumber + 1}
-                      autocomplete="off"
-                      className="FormControl DoorquestListPage-pageNumberInput"
-                      onchange={(e: InputEvent) => {
-                        const target = e.target as HTMLInputElement;
-                        let pageNumber = parseInt(target.value);
-
-                        if (isNaN(pageNumber)) {
-                          target.value = (this.pageNumber + 1).toString();
-                          return;
-                        }
-
-                        if (pageNumber < 1) pageNumber = 1;
-                        else if (pageNumber > this.getTotalPageCount()) pageNumber = this.getTotalPageCount();
-
-                        target.value = pageNumber.toString();
-                        this.goToPage(pageNumber);
-                      }}
+                  <nav className="DoorquestListPage-gridPagination">
+                    <Button
+                      disabled={this.pageNumber === 0}
+                      aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.first_page_button')}
+                      title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.first_page_button')}
+                      onclick={this.goToPage.bind(this, 1)}
+                      icon="fas fa-step-backward"
+                      className="Button Button--icon"
                     />
-                  ),
-                  currentNum: this.pageNumber + 1,
-                  total: this.getTotalPageCount(),
-                })}
-              </span>
-              <Button
-                disabled={!this.moreData}
-                aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.next_button')}
-                title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.next_button')}
-                onclick={this.nextPage.bind(this)}
-                icon="fas fa-chevron-right"
-                className="Button Button--icon"
-              />
-              <Button
-                disabled={!this.moreData}
-                aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.last_page_button')}
-                title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.last_page_button')}
-                onclick={this.goToPage.bind(this, this.getTotalPageCount())}
-                icon="fas fa-step-forward"
-                className="Button Button--icon"
-              />
-            </nav>
-          </section>
+                    <Button
+                      disabled={this.pageNumber === 0}
+                      aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.back_button')}
+                      title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.back_button')}
+                      onclick={this.previousPage.bind(this)}
+                      icon="fas fa-chevron-left"
+                      className="Button Button--icon"
+                    />
+                    <span className="DoorquestListPage-pageNumber">
+                      {app.translator.trans('stezkoy-doorquest.admin.list.pagination.page_counter', {
+                        current: (
+                          <input
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            value={this.loadingPageNumber + 1}
+                            autocomplete="off"
+                            className="FormControl DoorquestListPage-pageNumberInput"
+                            onchange={(e: InputEvent) => {
+                              const target = e.target as HTMLInputElement;
+                              let pageNumber = parseInt(target.value);
+
+                              if (isNaN(pageNumber)) {
+                                target.value = (this.pageNumber + 1).toString();
+                                return;
+                              }
+
+                              if (pageNumber < 1) pageNumber = 1;
+                              else if (pageNumber > this.getTotalPageCount()) pageNumber = this.getTotalPageCount();
+
+                              target.value = pageNumber.toString();
+                              this.goToPage(pageNumber);
+                            }}
+                          />
+                        ),
+                        currentNum: this.pageNumber + 1,
+                        total: this.getTotalPageCount(),
+                      })}
+                    </span>
+                    <Button
+                      disabled={!this.moreData}
+                      aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.next_button')}
+                      title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.next_button')}
+                      onclick={this.nextPage.bind(this)}
+                      icon="fas fa-chevron-right"
+                      className="Button Button--icon"
+                    />
+                    <Button
+                      disabled={!this.moreData}
+                      aria-label={app.translator.trans('stezkoy-doorquest.admin.list.pagination.last_page_button')}
+                      title={app.translator.trans('stezkoy-doorquest.admin.list.pagination.last_page_button')}
+                      onclick={this.goToPage.bind(this, this.getTotalPageCount())}
+                      icon="fas fa-step-forward"
+                      className="Button Button--icon"
+                    />
+                  </nav>
+                </div>
+            </section>
+          </div>
         </div>
       </div>
     );
