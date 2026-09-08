@@ -23,7 +23,7 @@
             "category": "feature",
             "icon": {
                 "name": "fas fa-question-circle",
-                "backgroundColor": "#3498db",
+                "backgroundColor": "#00a185",
                 "color": "#FFF"
             }
         }
