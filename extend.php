@@ -53,12 +53,12 @@ return [
 
     (new Extend\ApiResource(UserResource::class))
         ->fields(fn () => [
-            Schema\Str::make('fof-doorquest-id')
+            Schema\Str::make('doorquest-id')
                 ->writableOnCreate()
                 ->nullable()
                 ->visible(false)
                 ->set(fn () => null),
-            Schema\Str::make('fof-doorquest-answer')
+            Schema\Str::make('doorquest-answer')
                 ->writableOnCreate()
                 ->nullable()
                 ->visible(false)

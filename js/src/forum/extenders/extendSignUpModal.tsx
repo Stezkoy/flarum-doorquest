@@ -56,7 +56,7 @@ export default function extendSignUpModal() {
         </p>
         <input
           className="FormControl"
-          name="fof-doorquest-answer"
+          name="doorquest-answer"
           type="text"
           placeholder={app.translator.trans('stezkoy-doorquest.forum.sign_up.answer_placeholder')}
           bidi={this.doorquestAnswer}
@@ -69,8 +69,8 @@ export default function extendSignUpModal() {
   extend('flarum/forum/components/SignUpModal', 'submitData', function (data) {
     const question = this.doorquestQuestion;
     if (question) {
-      data['fof-doorquest-id'] = String(question.id);
-      data['fof-doorquest-answer'] = this.doorquestAnswer().trim();
+      data['doorquest-id'] = String(question.id);
+      data['doorquest-answer'] = this.doorquestAnswer().trim();
     }
     return data;
   });

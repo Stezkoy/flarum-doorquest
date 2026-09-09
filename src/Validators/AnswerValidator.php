@@ -7,8 +7,8 @@ use Flarum\Foundation\AbstractValidator;
 class AnswerValidator extends AbstractValidator
 {
     protected array $rules = [
-        'fof-doorquest-id' => ['required', 'integer'],
-        'fof-doorquest-answer' => ['required', 'doorquest_answer'],
+        'doorquest-id' => ['required', 'integer'],
+        'doorquest-answer' => ['required', 'doorquest_answer'],
     ];
 
     protected function getMessages(): array

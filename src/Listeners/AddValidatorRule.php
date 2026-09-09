@@ -18,7 +18,7 @@ class AddValidatorRule
         $validator->addExtension(
             'doorquest_answer',
             function ($attribute, $value, $parameters) use ($validator): bool {
-                $id = Arr::get($validator->getData(), 'fof-doorquest-id');
+                $id = Arr::get($validator->getData(), 'doorquest-id');
 
                 if (!$id) {
                     return false;

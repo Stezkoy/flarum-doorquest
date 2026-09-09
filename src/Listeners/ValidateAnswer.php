@@ -18,16 +18,16 @@ class ValidateAnswer
     public function handle(Saving $event): void
     {
         if (!$event->user->exists) {
-            $questionId = Arr::get($event->data, 'attributes.fof-doorquest-id');
-            $answer = strtoupper(trim((string) Arr::get($event->data, 'attributes.fof-doorquest-answer')));
+            $questionId = Arr::get($event->data, 'attributes.doorquest-id');
+            $answer = strtoupper(trim((string) Arr::get($event->data, 'attributes.doorquest-answer')));
 
             if (!$questionId || !$answer) {
                 return;
             }
 
             $this->validator->assertValid([
-                'fof-doorquest-id' => $questionId,
-                'fof-doorquest-answer' => $answer,
+                'doorquest-id' => $questionId,
+                'doorquest-answer' => $answer,
             ]);
 
             $event->user->doorquest_answer = $answer;
